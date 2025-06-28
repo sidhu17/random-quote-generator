@@ -3,23 +3,10 @@ const quoteAuthor = document.getElementById("quote-author");
 const newQuoteBtn = document.getElementById("new-quote");
 const copyBtn = document.getElementById("copy-quote");
 const toggleDarkBtn = document.getElementById("toggle-dark");
+const categorySelect = document.getElementById("category");
 const quoteBox = document.getElementById("quote-box");
 
-// Show toast message
-function showToast(message, type = "info") {
-  const toast = document.createElement("div");
-  toast.className = `toast ${type}`;
-  toast.textContent = message;
-
-  document.body.appendChild(toast);
-  setTimeout(() => toast.classList.add("show"), 10);
-  setTimeout(() => {
-    toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
-}
-
-// Fetch quote from a safe API
+// Fetch quote (dummyjson is frontend-safe)
 async function fetchQuote() {
   quoteText.textContent = "Loading...";
   quoteAuthor.textContent = "—";
@@ -34,7 +21,6 @@ async function fetchQuote() {
     quoteText.textContent = "Oops! Couldn't fetch quote.";
     quoteAuthor.textContent = "— Try again later";
     console.error("Fetch failed:", err);
-    showToast("❌ Failed to load quote", "error");
   } finally {
     quoteBox.classList.add("fade");
   }
@@ -44,8 +30,8 @@ async function fetchQuote() {
 function copyQuote() {
   const text = `${quoteText.textContent} ${quoteAuthor.textContent}`;
   navigator.clipboard.writeText(text)
-    .then(() => showToast("✅ Quote copied!", "success"))
-    .catch(() => showToast("❌ Copy failed", "error"));
+    .then(() => showToast("📋 Quote copied!"))
+    .catch(() => showToast("❌ Failed to copy"));
 }
 
 // Toggle dark mode
@@ -54,7 +40,32 @@ function toggleDarkMode() {
   localStorage.setItem("darkMode", document.body.classList.contains("dark"));
 }
 
-// Load dark mode preference
+// Toast message
+function showToast(message) {
+  const toast = document.createElement("div");
+  toast.textContent = message;
+  toast.style.position = "fixed";
+  toast.style.bottom = "20px";
+  toast.style.left = "50%";
+  toast.style.transform = "translateX(-50%)";
+  toast.style.background = "#333";
+  toast.style.color = "#fff";
+  toast.style.padding = "10px 20px";
+  toast.style.borderRadius = "6px";
+  toast.style.zIndex = "999";
+  toast.style.opacity = "0";
+  toast.style.transition = "opacity 0.3s";
+
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.style.opacity = "1");
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    setTimeout(() => toast.remove(), 300);
+  }, 2000);
+}
+
+// Load dark mode if saved
 if (localStorage.getItem("darkMode") === "true") {
   document.body.classList.add("dark");
 }
@@ -63,6 +74,7 @@ if (localStorage.getItem("darkMode") === "true") {
 newQuoteBtn.addEventListener("click", fetchQuote);
 copyBtn.addEventListener("click", copyQuote);
 toggleDarkBtn.addEventListener("click", toggleDarkMode);
+categorySelect.addEventListener("change", fetchQuote);
 
 // Initial quote
 fetchQuote();
