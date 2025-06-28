@@ -3,38 +3,35 @@ const quoteAuthor = document.getElementById("quote-author");
 const newQuoteBtn = document.getElementById("new-quote");
 const copyBtn = document.getElementById("copy-quote");
 
-// Fetch quote from type.fit API
+// Fetch quote from Quotable API
 async function fetchQuote() {
   quoteText.textContent = "Loading...";
   quoteAuthor.textContent = "—";
 
   try {
-    const res = await fetch("https://type.fit/api/quotes");
+    const res = await fetch("https://api.quotable.io/random");
     const data = await res.json();
-    const random = data[Math.floor(Math.random() * data.length)];
 
-    quoteText.textContent = `"${random.text}"`;
-    quoteAuthor.textContent = random.author ? `— ${random.author}` : "— Unknown";
+    quoteText.textContent = `"${data.content}"`;
+    quoteAuthor.textContent = `— ${data.author}`;
   } catch (error) {
     quoteText.textContent = "Oops! Couldn't fetch quote.";
     quoteAuthor.textContent = "— Try again later";
-    console.error("Fetch error:", error);
+    console.error(error);
   }
 }
 
 // Copy quote to clipboard
 function copyQuote() {
   const text = `${quoteText.textContent} ${quoteAuthor.textContent}`;
-  navigator.clipboard.writeText(text).then(() => {
-    alert("Quote copied to clipboard!");
-  }).catch(() => {
-    alert("Failed to copy quote.");
-  });
+  navigator.clipboard.writeText(text)
+    .then(() => alert("Quote copied to clipboard!"))
+    .catch(() => alert("Failed to copy quote."));
 }
 
 // Event Listeners
 newQuoteBtn.addEventListener("click", fetchQuote);
 copyBtn.addEventListener("click", copyQuote);
 
-// Load initial quote
+// Fetch initial quote
 fetchQuote();
