@@ -4,28 +4,26 @@ const newQuoteBtn = document.getElementById("new-quote");
 const copyBtn = document.getElementById("copy-quote");
 const toggleDarkBtn = document.getElementById("toggle-dark");
 
-// Fetch quote using a proxy to fix CORS issues on Chrome and GitHub Pages
+// Fetch quote from Quotable with ZenQuotes fallback
 async function fetchQuote() {
   quoteText.textContent = "Loading...";
   quoteAuthor.textContent = "—";
   document.getElementById("quote-box").classList.remove("fade");
 
   try {
-    // Main API via CORS proxy
-    const proxyRes = await fetch("https://api.allorigins.win/raw?url=https://api.quotable.io/random");
-    const data = await proxyRes.json();
-
+    // Main: Quotable.io (no proxy needed)
+    const res = await fetch("https://api.quotable.io/random");
+    const data = await res.json();
     quoteText.textContent = `"${data.content}"`;
     quoteAuthor.textContent = `— ${data.author}`;
-  } catch (mainErr) {
-    // Fallback to ZenQuotes if main API fails
+  } catch {
     try {
-      const fallbackRes = await fetch("https://zenquotes.io/api/random");
-      const fallbackData = await fallbackRes.json();
-
-      quoteText.textContent = `"${fallbackData[0].q}"`;
-      quoteAuthor.textContent = `— ${fallbackData[0].a}`;
-    } catch (fallbackErr) {
+      // Fallback: ZenQuotes (no proxy needed)
+      const res = await fetch("https://zenquotes.io/api/random");
+      const data = await res.json();
+      quoteText.textContent = `"${data[0].q}"`;
+      quoteAuthor.textContent = `— ${data[0].a}`;
+    } catch {
       quoteText.textContent = "Oops! Couldn't fetch quote.";
       quoteAuthor.textContent = "— Try again later";
     }
