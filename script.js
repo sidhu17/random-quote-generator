@@ -2,9 +2,8 @@ const quoteText = document.getElementById("quote-text");
 const quoteAuthor = document.getElementById("quote-author");
 const newQuoteBtn = document.getElementById("new-quote");
 const copyBtn = document.getElementById("copy-quote");
-const toggleDarkBtn = document.getElementById("toggle-dark");
 
-// Fetch quote from accessible API
+// Fetch quote from type.fit API
 async function fetchQuote() {
   quoteText.textContent = "Loading...";
   quoteAuthor.textContent = "—";
@@ -16,20 +15,10 @@ async function fetchQuote() {
 
     quoteText.textContent = `"${random.text}"`;
     quoteAuthor.textContent = random.author ? `— ${random.author}` : "— Unknown";
-
-    // Trigger fade-in animation
-    quoteText.classList.remove("fade-in");
-    quoteAuthor.classList.remove("fade-in");
-
-    void quoteText.offsetWidth; // force reflow
-    void quoteAuthor.offsetWidth;
-
-    quoteText.classList.add("fade-in");
-    quoteAuthor.classList.add("fade-in");
-
   } catch (error) {
     quoteText.textContent = "Oops! Couldn't fetch quote.";
     quoteAuthor.textContent = "— Try again later";
+    console.error("Fetch error:", error);
   }
 }
 
@@ -43,14 +32,9 @@ function copyQuote() {
   });
 }
 
-// Toggle dark mode
-toggleDarkBtn.addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-});
-
-// Event listeners
+// Event Listeners
 newQuoteBtn.addEventListener("click", fetchQuote);
 copyBtn.addEventListener("click", copyQuote);
 
-// Initial quote
+// Load initial quote
 fetchQuote();
