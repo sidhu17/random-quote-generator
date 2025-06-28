@@ -4,26 +4,37 @@ const newQuoteBtn = document.getElementById("new-quote");
 const copyBtn = document.getElementById("copy-quote");
 const toggleDarkBtn = document.getElementById("toggle-dark");
 
+// Fetch quote using a proxy to fix CORS issues on Chrome and GitHub Pages
 async function fetchQuote() {
   quoteText.textContent = "Loading...";
   quoteAuthor.textContent = "—";
   document.getElementById("quote-box").classList.remove("fade");
 
   try {
-    // Use quotable.io directly (CORS-enabled)
-    const res = await fetch("https://api.quotable.io/random");
-    const data = await res.json();
+    // Main API via CORS proxy
+    const proxyRes = await fetch("https://api.allorigins.win/raw?url=https://api.quotable.io/random");
+    const data = await proxyRes.json();
+
     quoteText.textContent = `"${data.content}"`;
     quoteAuthor.textContent = `— ${data.author}`;
-  } catch (error) {
-    quoteText.textContent = "Oops! Couldn't fetch quote.";
-    quoteAuthor.textContent = "— Try again later";
-    console.error("Quote fetch failed:", error);
+  } catch (mainErr) {
+    // Fallback to ZenQuotes if main API fails
+    try {
+      const fallbackRes = await fetch("https://zenquotes.io/api/random");
+      const fallbackData = await fallbackRes.json();
+
+      quoteText.textContent = `"${fallbackData[0].q}"`;
+      quoteAuthor.textContent = `— ${fallbackData[0].a}`;
+    } catch (fallbackErr) {
+      quoteText.textContent = "Oops! Couldn't fetch quote.";
+      quoteAuthor.textContent = "— Try again later";
+    }
   } finally {
     document.getElementById("quote-box").classList.add("fade");
   }
 }
 
+// Copy quote to clipboard
 function copyQuote() {
   const text = `${quoteText.textContent} ${quoteAuthor.textContent}`;
   navigator.clipboard.writeText(text).then(() => {
@@ -33,12 +44,13 @@ function copyQuote() {
   });
 }
 
+// Toggle dark mode
 function toggleDarkMode() {
   document.body.classList.toggle("dark");
   localStorage.setItem("darkMode", document.body.classList.contains("dark"));
 }
 
-// Apply saved dark mode preference
+// Load saved dark mode preference
 if (localStorage.getItem("darkMode") === "true") {
   document.body.classList.add("dark");
 }
@@ -48,5 +60,5 @@ newQuoteBtn.addEventListener("click", fetchQuote);
 copyBtn.addEventListener("click", copyQuote);
 toggleDarkBtn.addEventListener("click", toggleDarkMode);
 
-// Initial fetch
+// Load initial quote
 fetchQuote();
