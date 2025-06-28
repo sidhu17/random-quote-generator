@@ -5,7 +5,21 @@ const copyBtn = document.getElementById("copy-quote");
 const toggleDarkBtn = document.getElementById("toggle-dark");
 const quoteBox = document.getElementById("quote-box");
 
-// Fetch from frontend-safe API
+// Show toast message
+function showToast(message, type = "info") {
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// Fetch quote from a safe API
 async function fetchQuote() {
   quoteText.textContent = "Loading...";
   quoteAuthor.textContent = "—";
@@ -20,6 +34,7 @@ async function fetchQuote() {
     quoteText.textContent = "Oops! Couldn't fetch quote.";
     quoteAuthor.textContent = "— Try again later";
     console.error("Fetch failed:", err);
+    showToast("❌ Failed to load quote", "error");
   } finally {
     quoteBox.classList.add("fade");
   }
@@ -29,8 +44,8 @@ async function fetchQuote() {
 function copyQuote() {
   const text = `${quoteText.textContent} ${quoteAuthor.textContent}`;
   navigator.clipboard.writeText(text)
-    .then(() => alert("Quote copied!"))
-    .catch(() => alert("Copy failed"));
+    .then(() => showToast("✅ Quote copied!", "success"))
+    .catch(() => showToast("❌ Copy failed", "error"));
 }
 
 // Toggle dark mode
