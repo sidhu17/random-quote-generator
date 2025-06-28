@@ -4,6 +4,7 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
+
 body {
   background: #f5f7fa;
   color: #333;
@@ -13,6 +14,7 @@ body {
   justify-content: center;
   min-height: 100vh;
   padding: 20px;
+  transition: background 0.4s ease, color 0.4s ease;
 }
 
 .container {
@@ -50,4 +52,57 @@ button {
 
 button:hover {
   background: #3949ab;
+}
+
+#github-link {
+  display: inline-block;
+  margin-top: 20px;
+  color: #5c6bc0;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+#github-link:hover {
+  color: #3949ab;
+}
+
+/* Fade-in animation */
+.fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dark mode styles */
+body.dark {
+  background: #1c1c1c;
+  color: #f1f1f1;
+}
+
+body.dark .container {
+  background: #2c2c2c;
+}
+
+body.dark #quote-author {
+  color: #ccc;
+}
+
+body.dark button {
+  background: #6a7dff;
+}
+
+body.dark button:hover {
+  background: #5a6de0;
+}
+
+body.dark #github-link {
+  color: #7a93ff;
+}
+
+body.dark #github-link:hover {
+  color: #aab4ff;
 }
