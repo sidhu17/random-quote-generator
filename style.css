@@ -14,7 +14,12 @@ body {
   justify-content: center;
   min-height: 100vh;
   padding: 20px;
-  transition: background 0.4s ease, color 0.4s ease;
+  transition: background 0.3s, color 0.3s;
+}
+
+body.dark {
+  background: #121212;
+  color: #e0e0e0;
 }
 
 .container {
@@ -25,6 +30,11 @@ body {
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   text-align: center;
+  transition: background 0.3s, color 0.3s;
+}
+
+body.dark .container {
+  background: #1e1e1e;
 }
 
 #quote-text {
@@ -39,70 +49,32 @@ body {
   margin-bottom: 30px;
 }
 
-button {
+body.dark #quote-author {
+  color: #bbb;
+}
+
+button, #github-link {
   background: #5c6bc0;
   color: #fff;
   border: none;
   padding: 12px 24px;
   border-radius: 5px;
   cursor: pointer;
-  margin: 0 10px;
+  margin: 0 5px 10px;
   transition: background 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
 }
 
-button:hover {
+button:hover, #github-link:hover {
   background: #3949ab;
 }
 
-#github-link {
-  display: inline-block;
-  margin-top: 20px;
-  color: #5c6bc0;
-  text-decoration: none;
-  font-weight: bold;
-  transition: color 0.3s ease;
-}
-
-#github-link:hover {
-  color: #3949ab;
-}
-
-/* Fade-in animation */
-.fade-in {
-  animation: fadeIn 0.6s ease-in-out;
+.fade {
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-/* Dark mode styles */
-body.dark {
-  background: #1c1c1c;
-  color: #f1f1f1;
-}
-
-body.dark .container {
-  background: #2c2c2c;
-}
-
-body.dark #quote-author {
-  color: #ccc;
-}
-
-body.dark button {
-  background: #6a7dff;
-}
-
-body.dark button:hover {
-  background: #5a6de0;
-}
-
-body.dark #github-link {
-  color: #7a93ff;
-}
-
-body.dark #github-link:hover {
-  color: #aab4ff;
 }
